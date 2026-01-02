@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: docker-builder
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: kube-master
+  containers:
+  - name: docker
+    image: docker:24-dind
+    volumeMounts:
+    - name: shared
+      mountPath: /docker_build
+    securityContext:
+      privileged: true
+    command: ["dockerd-entrypoint.sh"]
+    args: ["--host=tcp://0.0.0.0:2375"]
+  volumes:
+  - name: shared
+    hostPath:
+      path: /yaml_shared/docker_build
+      type: Directory
