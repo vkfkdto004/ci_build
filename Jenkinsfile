@@ -1,11 +1,12 @@
 pipeline {
     agent any
 
-    environment{
+    environment {
         WORK_PATH = "/docker_build"
         IMAGE_NAME = "kimwooseop/ci_build"
         IMAGE_TAG = "v1"
     }
+
     stages {
         stage('Git Clone') {
             steps {
@@ -13,18 +14,19 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Docker Image Build') {
             steps {
                 echo 'Docker Image Build by Docker-builder'
-                container('docker-builder') { 
-                sh '''
-                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ${WORK_PATH}
-                '''
-                }
+                container('docker-builder') {
+                    sh '''
+                        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ${WORK_PATH}
+                    '''
                 }
             }
         }
-        stage('Docker Login'){
+
+        stage('Docker Login') {
             steps {
                 container('docker-builder') {
                     withCredentials([usernamePassword(
@@ -36,17 +38,19 @@ pipeline {
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         '''
                     }
+                }
             }
         }
+
         stage('Docker Push') {
             steps {
                 echo 'Docker Push to my Dockerhub Repository'
-                container('docker-builder') { 
-                sh '''
-                    docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                '''
+                container('docker-builder') {
+                    sh '''
+                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                    '''
                 }
             }
         }
     }
-}   
+}
