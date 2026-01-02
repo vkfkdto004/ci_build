@@ -16,11 +16,7 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 echo 'Docker Image Build by Docker-builder'
-<<<<<<< Updated upstream
                 container('docker-builder') { 
-=======
-                container('kubectl'){
->>>>>>> Stashed changes
                 sh '''
                     docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ${WORK_PATH}
                 '''
