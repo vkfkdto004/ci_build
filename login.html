@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .login-box {
+      width: 360px;
+      padding: 40px;
+      background: #1e293b;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    .login-box h2 {
+      color: #38bdf8;
+      margin-bottom: 30px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      background: #0f172a;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .login-box input::placeholder {
+      color: #94a3b8;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background: #38bdf8;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #020617;
+      transition: 0.2s;
+    }
+
+    .login-box button:hover {
+      background: #0ea5e9;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <h2>Sign In</h2>
+    <input type="text" placeholder="Username" />
+    <input type="password" placeholder="Password" />
+    <a href="index.html">
+        <button>Login</button>
+    </a>
+    <div class="footer">
+      © 2026 Kubernetes Project by Kim Jeff
+    </div>
+  </div>
+</body>
+</html>
