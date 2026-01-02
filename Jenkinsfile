@@ -17,9 +17,8 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 echo 'Docker Image Build by Docker-builder'
-                container('kubectl') { 
+                container('docker-builder') { 
                 sh '''
-                    ${REMOTE_BUILDER_POD} -- \
                     docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ${WORK_PATH}
                 '''
                 }
@@ -28,9 +27,8 @@ pipeline {
         stage('Docker Push') {
             steps {
                 echo 'Docker Push to my Dockerhub Repository'
-                container('kubectl') { 
+                container('docker-builder') { 
                 sh '''
-                    ${REMOTE_BUILDER_POD} -- \
                     docker push ${IMAGE_NAME}:${IMAGE_TAG}
                 '''
                 }
