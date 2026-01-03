@@ -46,3 +46,19 @@ statefulset.apps/jenkins   1/1     171m
   - 작업이 완료되면 Pod가 졸료되고, Jenkins controller는 상태 보존.
 ```
 
+<<<<<<< HEAD
+=======
+2026.01.03~04 - values.yaml을 수정하여 jenkins agent에 sidecar를 실행해서 docker-build를 하려고 했는데 실패. jenkinsfile에 kaniko pod를 추가로 실행시킬 수 있게 하여 image build 부터 push 까지 할 수 있도록 구성 완료 <br>
+```
+Jenkinsfile을 보면 도커허브에 업로드하기 위해 인증정보가 있어야 하는데 이 정보를 k8s에서 마운트해서 사용 + 도커허브 인증정보에 대한 k8s secret이 있어야함.
+
+kubectl create secret docker-registry dockerhubconfig \
+  --docker-server=https://index.docker.io/v1/ \
+  --docker-username=DOCKERHUB_USERNAME \
+  --docker-password=DOCKERHUB_TOKEN \
+  --docker-email=user@example.com \
+  -n ci
+
+위에 맞게 secret을 생성 후에 Jenkinsfile을 push 하면 자동으로 webhook이 실행되며 도커허브에 이미자가 업로드됨.
+```
+>>>>>>> fbd761a (jenkinsfile upload 2026.01.03-04)
