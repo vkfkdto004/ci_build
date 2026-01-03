@@ -1,56 +1,88 @@
 pipeline {
-    agent any
+  agent { 
+    kubernetes {
+      label 'kaniko-agent'
+      defaultContainer 'kaniko'
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    jenkins: kaniko
+spec:
+  containers:
+  - name: kaniko
+    resources:
+      requests:
+        memory: "1Gi"
+        cpu: "500m"
+      limits:
+        memory: "2Gi"
+        cpu: "1"
+    image: gcr.io/kaniko-project/executor:debug
+    imagePullPolicy: IfNotPresent
+    command: ["sleep"]
+    args: ["infinity"]
+    volumeMounts:
+    - name: dockerconfig
+      mountPath: /kaniko/.docker
+    env:
+    - name: HOME
+      value: "/home/jenkins/agent"
+  restartPolicy: Never
+  volumes:
+  - name: dockerconfig
+    projected:
+      sources:
+      - secret:
+          name: dockerhubconfig
+          items:
+          - key: .dockerconfigjson
+            path: config.json
+"""
+    }
+  }
 
-    environment {
-        WORK_PATH = "/docker_build"
-        IMAGE_NAME = "kimwooseop/ci_build"
-        IMAGE_TAG = "v1"
+  environment {
+    REGISTRY   = "docker.io"
+    PROJECT    = "kimwooseop/ci_build"
+    IMG_TAG = "v1"
+  }
+
+  stages {
+    stage('Git Checkout') {
+      steps {
+        echo 'Github Repogitory Jenkinsfile & Sourcecode Checkout'
+        checkout scm
+      }
     }
 
-    stages {
-        stage('Git Clone') {
-            steps {
-                echo 'Cloning Github Build Code!'
-                checkout scm
-            }
+    stage('Docker Image Build & Push') {
+      steps {
+        container(name: 'kaniko', shell: '/busybox/sh') {
+          script {
+            def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
+            sh """
+              echo "Image Building ${dest}"
+              /kaniko/executor \
+                --dockerfile=./Dockerfile \
+                --context=dir://./ \
+                --destination=${dest} \
+                --verbosity=debug \
+                --cleanup
+            """
+          }
         }
-
-        stage('Docker Image Build') {
-            steps {
-                echo 'Docker Image Build by Docker-builder'
-                container('docker-builder') {
-                    sh '''
-                        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ${WORK_PATH}
-                    '''
-                }
-            }
-        }
-
-        stage('Docker Login') {
-            steps {
-                container('docker-builder') {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'dockerhub',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )]) {
-                        sh '''
-                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        '''
-                    }
-                }
-            }
-        }
-
-        stage('Docker Push') {
-            steps {
-                echo 'Docker Push to my Dockerhub Repository'
-                container('docker-builder') {
-                    sh '''
-                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                    '''
-                }
-            }
-        }
+      }
     }
+  }
+
+  post { 
+    always { 
+      script {
+        def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
+        echo "Finished build of ${dest}"
+      }
+    }
+  }
 }
