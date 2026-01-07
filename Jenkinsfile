@@ -46,7 +46,7 @@ spec:
   environment {
     REGISTRY   = "docker.io"
     PROJECT    = "kimwooseop/ci_build"
-    IMG_TAG = "v1"
+    IMG_TAG = "v2"
   }
 
   stages {
