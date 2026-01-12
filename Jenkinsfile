@@ -77,26 +77,28 @@ spec:
     }
   }
 
-  post { 
-    always { 
-      script {
-        def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
-        echo "Finished build of ${dest}"
-      }
-    } success {
-      script {
-        def image = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
-
-        build job: 'cd_auto',
-          parameters: [
-            string(name: 'IMAGE', value: image),
-            string(name: 'GIT_BRANCH', value: 'main'),
-            credentials(name: 'GIT_CREDENTIALS_ID', value: 'github-push-creds')
-          ],
-          wait: false
-      }
+post {
+  always {
+    script {
+      def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
+      echo "Finished build of ${dest}"
     }
   }
+
+  success {
+    script {
+      def image = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
+
+      build job: 'cd_auto',
+        parameters: [
+          string(name: 'IMAGE', value: image),
+          string(name: 'GIT_BRANCH', value: 'main'),
+          credentials(name: 'GIT_CREDENTIALS_ID', value: 'github-push-creds')
+        ],
+        wait: false
+    }
+  }
+}
 }
 
 
