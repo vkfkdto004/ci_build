@@ -83,15 +83,11 @@ spec:
         def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
         echo "Finished build of ${dest}"
       }
-    }
-  }
-
-  post {
-    success {
+    } success {
       script {
         def image = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
 
-        build job: 'cd-gitops-update',
+        build job: 'cd_auto',
           parameters: [
             string(name: 'IMAGE', value: image),
             string(name: 'GIT_BRANCH', value: 'main'),
@@ -102,3 +98,5 @@ spec:
     }
   }
 }
+
+
