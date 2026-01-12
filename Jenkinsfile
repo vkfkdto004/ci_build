@@ -85,4 +85,20 @@ spec:
       }
     }
   }
+
+  post {
+    success {
+      script {
+        def image = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
+
+        build job: 'cd-gitops-update',
+          parameters: [
+            string(name: 'IMAGE', value: image),
+            string(name: 'GIT_BRANCH', value: 'main'),
+            credentials(name: 'GIT_CREDENTIALS_ID', value: 'github-push-creds')
+          ],
+          wait: false
+      }
+    }
+  }
 }
