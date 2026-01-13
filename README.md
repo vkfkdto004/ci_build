@@ -59,3 +59,4 @@ kubectl create secret docker-registry dockerhubconfig \
 
 위에 맞게 secret을 생성 후에 Jenkinsfile을 push 하면 자동으로 webhook이 실행되며 도커허브에 이미자가 업로드됨.
 ```
+2026.01.13 cd_auto를 포함하여 CI/CD 구축 완료. 조금씩 수정해가며 이제 FastAPI를 이용하여 백엔드 개발을 차츰 시작하려고한다.
