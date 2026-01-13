@@ -65,8 +65,8 @@ spec:
             sh """
               echo "Image Building ${dest}"
               /kaniko/executor \
-                --dockerfile=./Dockerfile \
-                --context=dir://./ \
+                --dockerfile=Dockerfile \
+                --context=dir://./web \
                 --destination=${dest} \
                 --verbosity=debug \
                 --cleanup
@@ -100,5 +100,3 @@ post {
   }
 }
 }
-
-
