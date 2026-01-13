@@ -46,7 +46,7 @@ spec:
   environment {
     REGISTRY   = "docker.io"
     PROJECT    = "kimwooseop/ci_build"
-    IMG_TAG = "v2"
+    IMAGE = "${BUILD_TAG}"
   }
 
   stages {
@@ -61,7 +61,7 @@ spec:
       steps {
         container(name: 'kaniko', shell: '/busybox/sh') {
           script {
-            def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
+            def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMAGE}"
             sh """
               echo "Image Building ${dest}"
               /kaniko/executor \
@@ -80,14 +80,14 @@ spec:
 post {
   always {
     script {
-      def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
+      def dest = "${env.REGISTRY}/${env.PROJECT}:${env.IMAGE}"
       echo "Finished build of ${dest}"
     }
   }
 
   success {
     script {
-      def image = "${env.REGISTRY}/${env.PROJECT}:${env.IMG_TAG}"
+      def image = "${env.REGISTRY}/${env.PROJECT}:${env.IMAGE}"
 
       build job: 'cd_auto',
         parameters: [
