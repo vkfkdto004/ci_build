@@ -60,3 +60,14 @@ kubectl create secret docker-registry dockerhubconfig \
 위에 맞게 secret을 생성 후에 Jenkinsfile을 push 하면 자동으로 webhook이 실행되며 도커허브에 이미자가 업로드됨.
 ```
 2026.01.13 cd_auto를 포함하여 CI/CD 구축 완료. 조금씩 수정해가며 이제 FastAPI를 이용하여 백엔드 개발을 차츰 시작하려고한다.
+2026.01.14
+```
+현재  레포지토리의 디렉터리는 아래와 같다.
+web - CI/CD 테스트 용도로 사용함.
+was
+- frontend - node.js (Svelte)
+- backend - Python (FastAPI)
+- DB - MySQL (개발단계 -> SQLite ---> 서버로 올릴 시에 MySQL에 맞도록 query문 및 코드 변경 필요)
+
+( 소스코드에 대한 업로드는 추후 이미지 빌드 진행에 관련된 dockerfile 또는 jenkinsfile에 대한 구성 및 방법을 파악하고 나서 업로드할 예정이고 간단하게 작업 중인 소스코드 미리 업로드)
+```
